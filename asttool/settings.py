@@ -27,11 +27,30 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN') 
+
+DRAMATIQ_BROKER = {
+    "BROKER": "dramatiq.brokers.redis.RedisBroker",
+    "OPTIONS": {
+        "url": 'redis://localhost:6379/0',
+    },
+    "MIDDLEWARE": [
+        "dramatiq.middleware.Prometheus",
+        "dramatiq.middleware.AgeLimit",
+        "dramatiq.middleware.TimeLimit",
+        "dramatiq.middleware.Callbacks",
+        "dramatiq.middleware.Retries",
+        "django_dramatiq.middleware.AdminMiddleware",
+        "django_dramatiq.middleware.DbConnectionsMiddleware",
+    ]
+}
 
 # Application definition
 
 DJANGO_APPS = (
-    # 'django_dramatiq',
+    'django_dramatiq',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
